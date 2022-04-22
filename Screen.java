@@ -64,7 +64,7 @@ public class Screen extends JPanel  implements Runnable , KeyListener {
 			while( true )
 
 			{
-			   Thread.sleep(17);
+			   Thread.sleep(34);
 			   repaint();
 			}
 		}
