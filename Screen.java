@@ -1,9 +1,12 @@
-import java.awt.Color;
+import java.awt.*;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,10 +19,18 @@ public class Screen extends JPanel  implements Runnable, KeyListener  {
 	private File Screen;
 	private File Log;
 	private File Turt;
+	private File FrogIMG;
 	
 	private int MouseX;
 	private int MouseY;
+	private int playerX, playerY;
+	
+	private int moveDistance = 50;
+	
+	private Boolean keyDown = false;
 	private Boolean living = true;
+	
+	private Frog frog;
 	
 	private Log log;
 	private Log log2;
@@ -49,8 +60,12 @@ public class Screen extends JPanel  implements Runnable, KeyListener  {
 		Screen = new File("screen.png");
 		Log = new File("Log.png");
 		Turt = new File("turt.png");
+		FrogIMG = new File("placeholder.jpg");
+		
+		frog = new Frog(400, 857, 50, 50, FrogIMG);
 		
 		setFocusable( true );
+		addKeyListener( this );
 		new Thread(this).start();
 		
 		log = new Log(10, 350, 1);
@@ -80,6 +95,8 @@ public class Screen extends JPanel  implements Runnable, KeyListener  {
 		window.clearRect( 0,0, 1280, 1280);
 		try {
 			window.drawImage(ImageIO.read(Screen), 0, 0, 896, 1024, null);
+			
+			
 			window.drawImage(ImageIO.read(Log), log.getX(), log.getY(), 200, 150, null);
 			window.drawImage(ImageIO.read(Log), log2.getX(), log2.getY(), 200, 150, null);
 			window.drawImage(ImageIO.read(Log), log3.getX(), log3.getY(), 200, 150, null);
@@ -99,6 +116,8 @@ public class Screen extends JPanel  implements Runnable, KeyListener  {
 			window.drawImage(ImageIO.read(Turt), down.getX(), down.getY(), 200, 75, null);
 			window.drawImage(ImageIO.read(Turt), down2.getX(), down2.getY(), 200, 75, null);
 			window.drawImage(ImageIO.read(Turt), down3.getX(), down3.getY(), 200, 75, null);
+			
+			window.drawImage(ImageIO.read(frog.sprite), frog.x, frog.y, frog.w, frog.h, null);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -154,18 +173,37 @@ public class Screen extends JPanel  implements Runnable, KeyListener  {
 		}
 	}
 
-
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
+		System.out.println(keyDown);
 		// TODO Auto-generated method stub
-		
+		if((e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) && keyDown == false) {
+			frog.move(-moveDistance, 0);
+			keyDown = true;
+		}
+		if((e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) && keyDown == false) {
+			frog.move(moveDistance, 0);
+			keyDown = true;
+		}
+		if((e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && keyDown == false) {
+			frog.move(0, moveDistance);
+			keyDown = true;
+		}
+		if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && keyDown == false)) {
+			frog.move(0, -moveDistance);
+			keyDown = true;
+		}
 	}
 
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_A)
+			keyDown = false;
 	}
+
 
 
 	@Override
