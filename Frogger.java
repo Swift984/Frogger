@@ -8,8 +8,8 @@ import java.io.*;
 
 public class Frogger extends JFrame
 {
-	public static final int WIDTH = 224*4;
-	public static final int HEIGHT = 256*4;
+	public static final int WIDTH = 896;
+	public static final int HEIGHT = 1024;
 	
 	public Frogger() throws IOException
 	{
