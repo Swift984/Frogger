@@ -91,19 +91,19 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		BaseFont = Font.createFont( Font.TRUETYPE_FONT, PressStart2P);
 		ArcadeFont = BaseFont.deriveFont(0, 32);
 		
-		Screen = new File("screen.png");
-		Log0 = new File("Log.0.png");
-		Log1 = new File("Log.1.png");
-		Log2 = new File("Log.2.png");
-		Turtle0 = new File("Turtle.0.0.png");
-		Turtle1 = new File("Turtle.1.0.png");
-		FrogIMG = new File("Frog.up.0.png");
+		Screen = new File("sprite\\screen.png");
+		Log0 = new File("sprite\\Log.0.png");
+		Log1 = new File("sprite\\Log.1.png");
+		Log2 = new File("sprite\\Log.2.png");
+		Turtle0 = new File("sprite\\Turtle.0.0.png");
+		Turtle1 = new File("sprite\\Turtle.1.0.png");
+		FrogIMG = new File("sprite\\Frog.up.0.png");
 		
-		Car4 = new File("Car.4.png");
-		Car3 = new File("Car.3.png");
-		Car2 = new File("Car.2.png");
-		Car1 = new File("Car.1.png");
-		Car0 = new File("Car.0.png");
+		Car4 = new File("sprite\\Car.4.png");
+		Car3 = new File("sprite\\Car.3.png");
+		Car2 = new File("sprite\\Car.2.png");
+		Car1 = new File("sprite\\Car.1.png");
+		Car0 = new File("sprite\\Car.0.png");
 		
 		frog = new Frog(448, 896, 64, 64, FrogIMG);
 		
@@ -116,7 +116,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		log3 = new Log(768,384,1);
 		
 		mid = new Log(0, 320, 2);
-		mid2 = new Log(448, 320, 2);	// im so fucking tired i can't comprehend this shit anymore
+		mid2 = new Log(448, 320, 2);
 		mid3 = new Log(960, 320, 2);
 		
 		top = new Log(0, 192, 3);
@@ -131,30 +131,30 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		down2 = new Turtle(625, 448,1);
 		down3 = new Turtle(300, 448,1);
 		
-		car1 = new Car(800, 825, 1, true);
-		car2 = new Car(500, 825, 1, true);
-		car3 = new Car(250, 825, 1, true);
-		car4 = new Car(0, 825, 1, true);
+		car1 = new Car(800, 832, 1, true);
+		car2 = new Car(500, 832, 1, true);
+		car3 = new Car(250, 832, 1, true);
+		car4 = new Car(0, 832, 1, true);
 		
-		tractor1 = new Car(800, 760, 2, false);
-		tractor2 = new Car(500, 760, 2, false);
-		tractor3 = new Car(250, 760, 2, false);
-		tractor4 = new Car(0, 760, 2, false);
+		tractor1 = new Car(800, 768, 2, false);
+		tractor2 = new Car(500, 768, 2, false);
+		tractor3 = new Car(250, 768, 2, false);
+		tractor4 = new Car(0, 768, 2, false);
 		
-		car5 = new Car(800, 700, 3, true);
-		car6 = new Car(500, 700, 3, true);
-		car7 = new Car(250, 700, 3, true);
-		car8 = new Car(0, 700, 3, true);
+		car5 = new Car(800, 704, 3, true);
+		car6 = new Car(500, 704, 3, true);
+		car7 = new Car(250, 704, 3, true);
+		car8 = new Car(0, 704, 3, true);
 		
 		racecar1 = new Car(800, 640, 4, false);
 		racecar2 = new Car(500, 640, 4, false);
 		racecar3 = new Car(250, 640, 4, false);
 		racecar4 = new Car(0, 640, 4, false);
 		
-		truck1 = new Car(800, 580, 5, true);
-		truck2 = new Car(500, 580, 5, true);
-		truck3 = new Car(250, 580, 5, true);
-		truck4 = new Car(0, 580, 5, true);
+		truck1 = new Car(800, 576, 5, true);
+		truck2 = new Car(500, 576, 5, true);
+		truck3 = new Car(250, 576, 5, true);
+		truck4 = new Car(0, 576, 5, true);
 	}
 	
 	public void paint( Graphics window )
@@ -162,7 +162,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.clearRect( 0,0, WIDTH, HEIGHT);
 		try {
 			window.drawImage(ImageIO.read(Screen), 0, 0, 224*4, 256*4, null);
-			
 			
 			window.drawImage(ImageIO.read(Log0), log.getX(), log.getY(), 192, 64, null);
 			window.drawImage(ImageIO.read(Log0), log2.getX(), log2.getY(), 192, 64, null);
