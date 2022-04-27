@@ -62,24 +62,22 @@ public class Car {
 	public void slide()
 	{	
 		
-			if(CarX <= -150 && Left == true)
-				Returntoright();
-			if(CarX >= 900 && Left == false)
-				Returntoleft();
-			
-			if(height == 1)
-				CarX = CarX - 3;
-			if(height == 2)
-				CarX = CarX + 3;	
-			if(height == 3)
-				CarX = CarX - 3;
-			if(height == 4)
-				CarX = CarX + 15;	
-			if(height == 5)
-				CarX = CarX - 2;
-			
+		if(CarX <= -150 && Left == true)
+			Returntoright();
+		if(CarX >= 900 && Left == false)
+			Returntoleft();
+		
+		if(height == 1)
+			CarX = CarX - 5;
+		if(height == 2)
+			CarX = CarX + 3;
+		if(height == 3)
+			CarX = CarX - 3;
+		if(height == 4)
+			CarX = CarX + 15;
+		if(height == 5)
+			CarX = CarX - 2;
+		
 	}
-	
-	
 	
 }

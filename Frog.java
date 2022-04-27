@@ -12,6 +12,26 @@ public class Frog {
 		sprite = s;
 	}
 	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public void changeX(int a)
+	{
+		x = a;
+	}
+	
+	public int getY()
+	{
+		return y;
+	}
+	
+	public void changeY(int b)
+	{
+		y = b;
+	}
+	
 	public void move(int xx, int yy) {
 		if(x + xx >= 0 && x + xx <= (Frogger.WIDTH - w))
 			x += xx;
