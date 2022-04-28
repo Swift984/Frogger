@@ -48,13 +48,18 @@ public class Log {
 	
 	public void Returntoleft()
 	{
-		logX = -200;
+		if(height == 1)
+			logX = -192;
+		if(height == 2)
+			logX = -448;
+		if(height == 3)
+			logX = -256;
 	}
 	
 	public void slide()
 	{	
 		
-			if(logX >= 900)
+			if(logX >= 896)
 				Returntoleft();
 			
 			if(height == 1)
