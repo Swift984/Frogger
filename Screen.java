@@ -21,6 +21,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Car2;
 	private File Car1;
 	private File Car0;
+	private File Lives;
 	
 	private int MouseX;
 	private int MouseY;
@@ -98,6 +99,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Turtle0 = new File("sprite\\Turtle.0.0.png");
 		Turtle1 = new File("sprite\\Turtle.1.0.png");
 		FrogIMG = new File("sprite\\Frog.up.0.png");
+		Lives = new File("sprite\\1-Up.png");
 		
 		Car4 = new File("sprite\\Car.4.png");
 		Car3 = new File("sprite\\Car.3.png");
@@ -105,7 +107,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Car1 = new File("sprite\\Car.1.png");
 		Car0 = new File("sprite\\Car.0.png");
 		
-		frog = new Frog(448, 896, 64, 64, FrogIMG);
+		frog = new Frog(448, 896, 7, FrogIMG);
 		
 		addKeyListener( this );
 		setFocusable( true );
@@ -116,7 +118,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		log3 = new Log(768,384,1);
 		
 		mid = new Log(0, 320, 2);
-		mid2 = new Log(448, 320, 2);
+		mid2 = new Log(448, 320, 2);	// im so fucking tired i can't comprehend this shit anymore
 		mid3 = new Log(960, 320, 2);
 		
 		top = new Log(0, 192, 3);
@@ -163,6 +165,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		try {
 			window.drawImage(ImageIO.read(Screen), 0, 0, 224*4, 256*4, null);
 			
+			
 			window.drawImage(ImageIO.read(Log0), log.getX(), log.getY(), 192, 64, null);
 			window.drawImage(ImageIO.read(Log0), log2.getX(), log2.getY(), 192, 64, null);
 			window.drawImage(ImageIO.read(Log0), log3.getX(), log3.getY(), 192, 64, null);
@@ -208,7 +211,13 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			window.drawImage(ImageIO.read(Car0), car3.getX(), car3.getY(), 64, 64, null);
 			window.drawImage(ImageIO.read(Car0), car4.getX(), car4.getY(), 64, 64, null);
 			
-			window.drawImage(ImageIO.read(FrogIMG), frog.getX(), frog.getY(), 64, 64, null);
+			window.drawImage(ImageIO.read(FrogIMG), frog.x, frog.y, 64, 64, null);
+			
+			for(int x = 0; x<frog.getLives(); x++) {
+				for(int liveX = 0; liveX < 192; liveX += 32) {
+					window.drawImage(ImageIO.read(Lives), liveX, 990, 32, 32, null);
+				}
+			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -269,12 +278,39 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			truck4.slide();
 		}
 		
+		// Collision Detection
+		if(	car1.isColliding(frog.x, frog.y) ||
+			car2.isColliding(frog.x, frog.y) ||
+			car3.isColliding(frog.x, frog.y) ||
+			car4.isColliding(frog.x, frog.y) ||
+			
+			tractor1.isColliding(frog.x, frog.y) ||
+			tractor2.isColliding(frog.x, frog.y) ||
+			tractor3.isColliding(frog.x, frog.y) ||
+			tractor4.isColliding(frog.x, frog.y) ||
+			
+			racecar1.isColliding(frog.x, frog.y) ||
+			racecar2.isColliding(frog.x, frog.y) ||
+			racecar3.isColliding(frog.x, frog.y) ||
+			racecar4.isColliding(frog.x, frog.y) ||
+			
+			car5.isColliding(frog.x, frog.y) ||
+			car6.isColliding(frog.x, frog.y) ||
+			car7.isColliding(frog.x, frog.y) ||
+			car8.isColliding(frog.x, frog.y) ||
+			
+			truck1.isColliding(frog.x, frog.y, 128) ||
+			truck2.isColliding(frog.x, frog.y, 128) ||
+			truck3.isColliding(frog.x, frog.y, 128) ||
+			truck4.isColliding(frog.x, frog.y, 128) 
+		  )
+			frog.die();
+		
 	}
 	
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		System.out.println(keyDown);
 		if((e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) && keyDown == false) {
 			frog.move(-moveDistance, 0);
 			keyDown = true;
