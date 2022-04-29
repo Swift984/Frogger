@@ -1,27 +1,43 @@
 import java.io.File;
 
 public class Frog {
-	public int x,y,w,h;
+	public int x,y;
 	public File sprite;
 	
-	public Frog(int xx, int yy, int ww, int hh, File s) {
+	private int lives;
+	
+	public Frog(int xx, int yy, int l, File s) {
 		x = xx;
 		y = yy;
-		w = ww;
-		h = hh;
 		sprite = s;
+		lives = l;
+	}
+	
+	public int getLives() {
+		return lives;
 	}
 	
 	public void move(int xx, int yy) {
-		if(x + xx >= 0 && x + xx <= (Frogger.WIDTH - w))
+		System.out.println(x + ", " + y );
+		if(x + xx >= 0 && x + xx <= (Frogger.WIDTH - 64))
 			x += xx;
-		if(y + yy >= 0 && y + yy <= (Frogger.HEIGHT - h))
+		if(y + yy >= 0 && y + yy <= (Frogger.HEIGHT - 64))
 			y += yy;
-		
-		System.out.println("(" + x + ", " + y + ")");
 	}
 	
 	public void setSprite(File file) {
 		sprite = file;
+	}
+	
+	public void die() {
+		lives--;
+		System.out.println(lives);
+		x = 448;
+		y = 896;
+	}
+	
+	public void reset() {
+		x = 448;
+		y = 896;
 	}
 }

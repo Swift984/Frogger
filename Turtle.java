@@ -48,19 +48,19 @@ public class Turtle {
 	
 	public void Returntoright()
 	{
-		TurtX = 1000;
+		TurtX = 896;
 	}
 	
 	public void slide()
 	{	
 		
-			if(TurtX <= 0)
+			if(TurtX <= -192)
 				Returntoright();
 			
 			if(height == 1)
-				TurtX = TurtX - 3;
-			if(height == 2)
 				TurtX = TurtX - 6;
+			if(height == 2)
+				TurtX = TurtX - 8;
 			
 	}
 	
