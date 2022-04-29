@@ -7,18 +7,18 @@ import javax.imageio.*;
 
 public class Car {
 	
-	// 128, 64
-	
 	private int CarX;
 	private int CarY;
 	private int height;
+	private int speed;
 	private Boolean Left = true;
 	
-	Car(int x, int y, int h, Boolean l)
+	Car(int x, int y, int h, int s, Boolean l)
 	{
 		CarX = x;
 		CarY = y;
 		height = h;
+		speed = s;
 		Left = l;
 		
 	}
@@ -28,28 +28,30 @@ public class Car {
 		return CarX;
 	}
 	
-	public int getHeight()
-	{
-		return height;
-	}
-	
-
 	public void changeX(int x)
 	{
 		CarX = x;
 	}
-
+	
 	public int getY()
 	{
 		return CarY;
 	}
 	
-
 	public void changeY(int y)
 	{
 		CarY = y;
 	}
 	
+	public int getHeight()
+	{
+		return height;
+	}
+	
+	public int getSpeed()
+	{
+		return speed;
+	}
 	public void Returntoright()
 	{
 		CarX = 1000;
@@ -70,15 +72,15 @@ public class Car {
 			Returntoleft();
 		
 		if(height == 1)
-			CarX = CarX - 5;
+			CarX = CarX - speed;
 		if(height == 2)
-			CarX = CarX + 3;
+			CarX = CarX + speed;
 		if(height == 3)
-			CarX = CarX - 3;
+			CarX = CarX - speed;
 		if(height == 4)
-			CarX = CarX + 15;
+			CarX = CarX + speed;
 		if(height == 5)
-			CarX = CarX - 2;
+			CarX = CarX - speed;
 		
 	}
 	

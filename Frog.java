@@ -3,7 +3,6 @@ import java.io.File;
 public class Frog {
 	public int x,y;
 	public File sprite;
-	
 	private int lives;
 	
 	public Frog(int xx, int yy, int l, File s) {
@@ -11,6 +10,31 @@ public class Frog {
 		y = yy;
 		sprite = s;
 		lives = l;
+	}
+	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public void changeX(int a)
+	{
+		x = a;
+	}
+	
+	public int getY()
+	{
+		return y;
+	}
+	
+	public void changeY(int b)
+	{
+		y = b;
+	}
+	
+	public void slide(int s)
+	{
+		x = x + s;
 	}
 	
 	public int getLives() {
@@ -35,7 +59,6 @@ public class Frog {
 		x = 448;
 		y = 896;
 	}
-
 	
 	public void reset() {
 		x = 448;
