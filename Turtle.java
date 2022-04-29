@@ -10,13 +10,14 @@ public class Turtle {
 	private int TurtX;
 	private int TurtY;
 	private int height;
+	private int speed;
 	
-	Turtle(int x, int y, int h)
+	Turtle(int x, int y, int h, int s)
 	{
 		TurtX = x;
 		TurtY = y;
 		height = h;
-		
+		speed = s;
 	}
 	
 	public int getX()
@@ -24,43 +25,46 @@ public class Turtle {
 		return TurtX;
 	}
 	
-	public int getHeight()
-	{
-		return height;
-	}
-	
-
 	public void changeX(int x)
 	{
 		TurtX = x;
 	}
-
+	
 	public int getY()
 	{
 		return TurtY;
 	}
 	
-
 	public void changeY(int y)
 	{
 		TurtY = y;
 	}
 	
+	public int getHeight()
+	{
+		return height;
+	}
+	
+	public int getSpeed()
+	{
+		return speed;
+	}
+	
 	public void Returntoright()
 	{
-		TurtX = 1000;
+		TurtX = 896;
 	}
 	
 	public void slide()
 	{	
 		
-			if(TurtX <= 0)
+			if(TurtX <= -192)
 				Returntoright();
 			
 			if(height == 1)
-				TurtX = TurtX - 3;
+				TurtX = TurtX - speed;
 			if(height == 2)
-				TurtX = TurtX - 6;
+				TurtX = TurtX - speed;
 			
 	}
 	
