@@ -16,22 +16,31 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Turtle0;
 	private File Turtle1;
 	private File FrogIMG;
+	private File GoalFrogIMG;
+
 	private File Car4;
 	private File Car3;
 	private File Car2;
 	private File Car1;
 	private File Car0;
 	private File Lives;
-	
+
 	private int MouseX;
 	private int MouseY;
 	private int playerX, playerY;
 	private int score = 0;
-	
+
 	private int moveDistance = 64;
 	
 	private Boolean keyDown = false;
+	private Boolean godMode = false;
 	private Boolean living = true;
+	
+	private Boolean end1 = false;
+	private Boolean end2 = false;
+	private Boolean end3 = false;
+	private Boolean end4 = false;
+	private Boolean end5 = false;
 	
 	private Frog frog;
 	
@@ -50,7 +59,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private Turtle up;
 	private Turtle up2;
 	private Turtle up3;
-	
+
 	private Turtle down;
 	private Turtle down2;
 	private Turtle down3;
@@ -79,7 +88,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private Car truck2;
 	private Car truck3;
 	private Car truck4;
-	
+
 	private File PressStart2P;
 	private Font BaseFont;
 	private Font ArcadeFont;
@@ -99,6 +108,8 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Turtle0 = new File("sprite\\Turtle.0.0.png");
 		Turtle1 = new File("sprite\\Turtle.1.0.png");
 		FrogIMG = new File("sprite\\Frog.up.0.png");
+		GoalFrogIMG = new File("sprite\\GoalFrog.0.png");
+
 		Lives = new File("sprite\\1-Up.png");
 		
 		Car4 = new File("sprite\\Car.4.png");
@@ -213,10 +224,25 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			
 			window.drawImage(ImageIO.read(FrogIMG), frog.x, frog.y, 64, 64, null);
 			
-			for(int x = 0; x<frog.getLives(); x++) {
-				for(int liveX = 0; liveX < 192; liveX += 32) {
-					window.drawImage(ImageIO.read(Lives), liveX, 990, 32, 32, null);
-				}
+			//End Frogs
+			if(end1)
+			window.drawImage(ImageIO.read(GoalFrogIMG), 32, 128, 64, 64, null);
+			
+			if(end2)
+			window.drawImage(ImageIO.read(GoalFrogIMG), 225, 128, 64, 64, null);
+			
+			if(end3)
+			window.drawImage(ImageIO.read(GoalFrogIMG), 416, 128, 64, 64, null);
+			
+			if(end4)
+			window.drawImage(ImageIO.read(GoalFrogIMG), 608, 128, 64, 64, null);
+			
+			if(end5)
+			window.drawImage(ImageIO.read(GoalFrogIMG), 800, 128, 64, 64, null);
+			
+			
+			for(int liveX = 0; liveX < (32 * frog.getLives()) - 32; liveX += 32) {
+				window.drawImage(ImageIO.read(Lives), liveX, 960, 32, 32, null);
 			}
 			
 		} catch (IOException e) {
@@ -303,9 +329,35 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			truck2.isColliding(frog.x, frog.y, 128) ||
 			truck3.isColliding(frog.x, frog.y, 128) ||
 			truck4.isColliding(frog.x, frog.y, 128) 
-		  )
-			frog.die();
+		  ) {
+			if(!godMode)
+				frog.die();
+		}
 		
+		if(frog.y == 128 && frog.x >= 0 && frog.x <= 64) {
+			end1 = true;
+			frog.reset();
+		}
+		
+		if(frog.y == 128 && frog.x > 128 && frog.x <= 256) {
+			end2 = true;
+			frog.reset();
+		}
+		
+		if(frog.y == 128 && frog.x >= 384 && frog.x <= 448) {
+			end3 = true;
+			frog.reset();
+		}
+		
+		if(frog.y == 128 && frog.x >= 576 && frog.x <= 640) {
+			end4 = true;
+			frog.reset();
+		}
+		
+		if(frog.y == 128 && frog.x >= 768 && frog.x <= 832) {
+			end5 = true;
+			frog.reset();
+		}
 	}
 	
 	
@@ -327,7 +379,10 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			frog.move(0, -moveDistance);
 			keyDown = true;
 		}
-		
+		if(e.getKeyCode() == KeyEvent.VK_F5) {
+			godMode = !godMode;
+			System.out.println("God Mode: " + godMode);
+		}
 	}
 	
 	@Override

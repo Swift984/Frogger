@@ -18,6 +18,7 @@ public class Frog {
 	}
 	
 	public void move(int xx, int yy) {
+		System.out.println(x + ", " + y );
 		if(x + xx >= 0 && x + xx <= (Frogger.WIDTH - 64))
 			x += xx;
 		if(y + yy >= 0 && y + yy <= (Frogger.HEIGHT - 64))
@@ -31,6 +32,12 @@ public class Frog {
 	public void die() {
 		lives--;
 		System.out.println(lives);
+		x = 448;
+		y = 896;
+	}
+
+	
+	public void reset() {
 		x = 448;
 		y = 896;
 	}

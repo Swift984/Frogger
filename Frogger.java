@@ -16,7 +16,8 @@ public class Frogger extends JFrame
 		
 		setSize(WIDTH,HEIGHT);
 		setLocation(650,0);
-		setIconImage(new ImageIcon("sprite\\GoalFrog.0.png").getImage());
+		setIconImage(new ImageIcon("Frog.up.0.png").getImage());
+
 		
 		getContentPane().add(new Screen() );
 		
