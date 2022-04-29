@@ -18,11 +18,12 @@ public class Frog {
 	}
 	
 	public void move(int xx, int yy) {
-		System.out.println(x + ", " + y );
 		if(x + xx >= 0 && x + xx <= (Frogger.WIDTH - 64))
 			x += xx;
-		if(y + yy >= 0 && y + yy <= (Frogger.HEIGHT - 64))
+		if(y + yy >= 0 && y + yy <= (Frogger.HEIGHT - 64) && !checkPos(0, 24, 192) && !checkPos(50, 216, 192) && !checkPos(484, 600, 192) && !checkPos(74*4, 101*4, 192) && !checkPos(169*4, 197*4, 192) && !checkPos(217*4, 223*4, 196))
 			y += yy;
+		
+		System.out.println(x + ", " + y);
 	}
 	
 	public void setSprite(File file) {
@@ -40,5 +41,9 @@ public class Frog {
 	public void reset() {
 		x = 448;
 		y = 896;
+	}
+	
+	public Boolean checkPos(int mX, int x, int y) {
+		return (this.x >= mX && this.x <= x) && (this.y == y);
 	}
 }
