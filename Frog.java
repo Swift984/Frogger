@@ -35,6 +35,7 @@ public class Frog {
 		x = 448;
 		y = 896;
 	}
+
 	
 	public void reset() {
 		x = 448;

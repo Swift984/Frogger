@@ -17,13 +17,14 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Turtle1;
 	private File FrogIMG;
 	private File GoalFrogIMG;
+
 	private File Car4;
 	private File Car3;
 	private File Car2;
 	private File Car1;
 	private File Car0;
 	private File Lives;
-	
+
 	private int MouseX;
 	private int MouseY;
 	private int playerX, playerY;
@@ -58,7 +59,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private Turtle up;
 	private Turtle up2;
 	private Turtle up3;
-	
+
 	private Turtle down;
 	private Turtle down2;
 	private Turtle down3;
@@ -87,7 +88,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private Car truck2;
 	private Car truck3;
 	private Car truck4;
-	
+
 	private File PressStart2P;
 	private Font BaseFont;
 	private Font ArcadeFont;
@@ -108,6 +109,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Turtle1 = new File("sprite\\Turtle.1.0.png");
 		FrogIMG = new File("sprite\\Frog.up.0.png");
 		GoalFrogIMG = new File("sprite\\GoalFrog.0.png");
+
 		Lives = new File("sprite\\1-Up.png");
 		
 		Car4 = new File("sprite\\Car.4.png");
@@ -356,7 +358,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			end5 = true;
 			frog.reset();
 		}
-		
 	}
 	
 	
@@ -378,12 +379,10 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			frog.move(0, -moveDistance);
 			keyDown = true;
 		}
-		
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
 			godMode = !godMode;
 			System.out.println("God Mode: " + godMode);
 		}
-		
 	}
 	
 	@Override
