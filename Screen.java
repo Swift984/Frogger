@@ -256,7 +256,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.setColor(Color.RED);
 		if(steps == 0)
 			window.drawString("   00000   00000            ", 0, 64 );
-		if(steps < 10)
+		if(steps < 10 && steps > 0)
 			window.drawString("   000" + score + "   00000            ", 0, 64 );
 		if(steps < 100 && steps >= 10)
 			window.drawString("   00" + score + "   00000            ", 0, 64 );
@@ -408,22 +408,16 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			frog.move(-moveDistance, 0);
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.left.0.png");
-			score = score + 10;
-			steps ++;
 		}
 		if((e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) && keyDown == false) {
 			frog.move(moveDistance, 0);
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.right.0.png");
-			score = score + 10;
-			steps ++;
 		}
 		if((e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && keyDown == false) {
 			frog.move(0, moveDistance);
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.down.0.png");
-			score = score + 10;
-			steps ++;
 		}
 		if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && keyDown == false)) {
 			frog.move(0, -moveDistance);
