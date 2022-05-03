@@ -26,7 +26,10 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private int MouseX;
 	private int MouseY;
 	private int playerX, playerY;
-	private int score = 0;
+	private int score = 00000;
+	private int cnt;
+	private String scoredraw;
+	private int steps;
 
 	private int moveDistance = 64;
 	
@@ -251,7 +254,16 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.setColor(Color.WHITE);
 		window.drawString("    1-UP  HI-SCORE          ", 0, 32 );
 		window.setColor(Color.RED);
-		window.drawString("   00000   00000            ", 0, 64 );
+		if(steps == 0)
+			window.drawString("   00000   00000            ", 0, 64 );
+		if(steps < 10)
+			window.drawString("   000" + score + "   00000            ", 0, 64 );
+		if(steps < 100 && steps >= 10)
+			window.drawString("   00" + score + "   00000            ", 0, 64 );
+		if(steps < 1000 && steps >= 100)
+			window.drawString("   0" + score + "   00000            ", 0, 64 );
+		if(steps < 10000 && steps >= 1000)
+			window.drawString("   " + score + "   00000            ", 0, 64 );
 		
 		if(living = true)
 		{
@@ -368,6 +380,27 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		}
 	}
 	
+	public String drawscore()
+	{
+		int bob = score;
+		if(bob % 10 != 0)
+		{
+			bob = bob % 10;
+			cnt++;
+			System.out.println(cnt);
+		}
+		if(cnt == 2)
+			return scoredraw = "000" + score;
+		if(cnt == 3)
+			return scoredraw = "00" + score;
+		if(cnt == 4)
+			return scoredraw = "0" + score;
+		if(cnt == 5)
+			return scoredraw = ""  + score;
+		return "00000";
+		
+	}
+	
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -375,21 +408,29 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			frog.move(-moveDistance, 0);
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.left.0.png");
+			score = score + 10;
+			steps ++;
 		}
 		if((e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) && keyDown == false) {
 			frog.move(moveDistance, 0);
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.right.0.png");
+			score = score + 10;
+			steps ++;
 		}
 		if((e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && keyDown == false) {
 			frog.move(0, moveDistance);
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.down.0.png");
+			score = score + 10;
+			steps ++;
 		}
 		if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && keyDown == false)) {
 			frog.move(0, -moveDistance);
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.up.0.png");
+			score = score + 10;
+			steps ++;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
 			godMode = !godMode;
