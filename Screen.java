@@ -1,11 +1,21 @@
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.util.*;
 
 public class Screen extends JPanel implements Runnable , KeyListener
 {
@@ -30,6 +40,8 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private int cnt;
 	private String scoredraw;
 	private int steps;
+	int scoreLast;
+	int highscore;
 
 	private int moveDistance = 64;
 	
@@ -97,6 +109,9 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	public Screen() throws FontFormatException, IOException
 	{
 		setBackground(Color.WHITE);
+		
+		highscore = Integer.parseInt(Files.readAllLines(Paths.get("score")).get(0));
+		System.out.println("Highscore: " + highscore);
 		
 		PressStart2P = new File("PressStart2P.ttf");
 		BaseFont = Font.createFont( Font.TRUETYPE_FONT, PressStart2P);
@@ -254,7 +269,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.setColor(Color.WHITE);
 		window.drawString("    1-UP  HI-SCORE          ", 0, 32 );
 		window.setColor(Color.RED);
-		if(steps == 0)
+		/*if(steps == 0)
 			window.drawString("   00000   00000            ", 0, 64 );
 		if(steps < 10 && steps > 0)
 			window.drawString("   000" + score + "   00000            ", 0, 64 );
@@ -264,6 +279,9 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			window.drawString("   0" + score + "   00000            ", 0, 64 );
 		if(steps < 10000 && steps >= 1000)
 			window.drawString("   " + score + "   00000            ", 0, 64 );
+		*/
+		
+		window.drawString("   " + String.format("%05d", score) + "   " + String.format("%05d", highscore), 0, 64);
 		
 		if(living = true)
 		{
@@ -378,6 +396,15 @@ public class Screen extends JPanel implements Runnable , KeyListener
 				frog.die();
 		}
 		
+		if(score > highscore)
+			try {
+				highscore = score;
+				saveScore(score);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 		if(frog.y == 128 && frog.x >= 0 && frog.x <= 64) {
 			end1 = true;
 			frog.reset();
@@ -404,27 +431,11 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		}
 	}
 	
-	public String drawscore()
-	{
-		int bob = score;
-		if(bob % 10 != 0)
-		{
-			bob = bob % 10;
-			cnt++;
-			System.out.println(cnt);
+	public void saveScore(int s) throws IOException {
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("score"), "utf-8"))) {
+			writer.write("" + s);
 		}
-		if(cnt == 2)
-			return scoredraw = "000" + score;
-		if(cnt == 3)
-			return scoredraw = "00" + score;
-		if(cnt == 4)
-			return scoredraw = "0" + score;
-		if(cnt == 5)
-			return scoredraw = ""  + score;
-		return "00000";
-		
 	}
-	
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -453,6 +464,20 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
 			godMode = !godMode;
 			System.out.println("God Mode: " + godMode);
+		}
+		if(e.getKeyCode() == KeyEvent.VK_F6) {
+			score += 100;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_F7) {
+			score = 0;
+			highscore = 0;
+			
+			try {
+				saveScore(0);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 	}
