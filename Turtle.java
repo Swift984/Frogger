@@ -68,6 +68,14 @@ public class Turtle {
 			
 	}
 	
-	
+	public Boolean isColliding(int fX, int fY, int size) {
+		
+		int xPadding = 32;
+		
+		if((fX - TurtX + xPadding) > 0 && (fX - TurtX + xPadding) <= size && TurtY == fY)
+			return true;
+		
+		return false;
+	}
 	
 }

@@ -368,6 +368,28 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			truck3.isColliding(frog.x, frog.y, 128) ||
 			truck4.isColliding(frog.x, frog.y, 128) ||
 			
+			(
+				!log.isColliding(frog.x, frog.y, 192) &&
+				!log2.isColliding(frog.x, frog.y, 192) &&
+				!log3.isColliding(frog.x, frog.y, 192) &&
+				
+				!mid.isColliding(frog.x, frog.y, 384) &&
+				!mid2.isColliding(frog.x, frog.y, 384) &&
+				!mid3.isColliding(frog.x, frog.y, 384) &&
+				
+				!top.isColliding(frog.x, frog.y, 256) &&
+				!top2.isColliding(frog.x, frog.y, 256) &&
+				!top3.isColliding(frog.x, frog.y, 256) &&
+				
+				!up.isColliding(frog.x, frog.y, 128) &&
+				!up2.isColliding(frog.x, frog.y, 128) &&
+				!up3.isColliding(frog.x, frog.y, 128) &&
+				
+				!down.isColliding(frog.x, frog.y, 192) &&
+				!down2.isColliding(frog.x, frog.y, 192) &&
+				!down3.isColliding(frog.x, frog.y, 192) &&
+				frog.y < 512 && frog.y > 128 ) ||
+			
 			frog.x < -64 || frog.x > 896
 		  ) {
 			if(!godMode)
