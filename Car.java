@@ -87,8 +87,7 @@ public class Car {
 	public Boolean isColliding(int fX, int fY) {
 		//System.out.println("Distance X: " + (fX - CarX) + ", Y: " + CarY + ", " + fY);
 		
-		int xPadding = 30;	
-		int yPadding = 0; 	// remove if not needed
+		int xPadding = 32;
 		
 		if((fX - CarX + xPadding) > 0 && (fX - CarX + xPadding) <= 64 && CarY == fY)
 			return true;
@@ -99,8 +98,7 @@ public class Car {
 	public Boolean isColliding(int fX, int fY, int size) {
 		//System.out.println("Distance X: " + (fX - CarX) + ", Y: " + CarY + ", " + fY);
 		
-		int xPadding = 30;	
-		int yPadding = 0; 	// remove if not needed
+		int xPadding = 32;
 		
 		if((fX - CarX + xPadding) > 0 && (fX - CarX + xPadding) <= size && CarY == fY)
 			return true;

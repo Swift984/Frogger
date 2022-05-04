@@ -75,6 +75,14 @@ public class Log {
 		
 	}
 	
-	
+	public Boolean isColliding(int fX, int fY, int size) {
+		
+		int xPadding = 32;
+		
+		if((fX - logX + xPadding) > 0 && (fX - logX + xPadding) <= size && logY == fY)
+			return true;
+		
+		return false;
+	}
 	
 }

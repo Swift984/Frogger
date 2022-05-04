@@ -26,7 +26,10 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private int MouseX;
 	private int MouseY;
 	private int playerX, playerY;
-	private int score = 0;
+	private int score = 00000;
+	private int cnt;
+	private String scoredraw;
+	private int steps;
 
 	private int moveDistance = 64;
 	
@@ -251,7 +254,16 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.setColor(Color.WHITE);
 		window.drawString("    1-UP  HI-SCORE          ", 0, 32 );
 		window.setColor(Color.RED);
-		window.drawString("   00000   00000            ", 0, 64 );
+		if(steps == 0)
+			window.drawString("   00000   00000            ", 0, 64 );
+		if(steps < 10 && steps > 0)
+			window.drawString("   000" + score + "   00000            ", 0, 64 );
+		if(steps < 100 && steps >= 10)
+			window.drawString("   00" + score + "   00000            ", 0, 64 );
+		if(steps < 1000 && steps >= 100)
+			window.drawString("   0" + score + "   00000            ", 0, 64 );
+		if(steps < 10000 && steps >= 1000)
+			window.drawString("   " + score + "   00000            ", 0, 64 );
 		
 		if(living = true)
 		{
@@ -336,7 +348,31 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			truck1.isColliding(frog.x, frog.y, 128) ||
 			truck2.isColliding(frog.x, frog.y, 128) ||
 			truck3.isColliding(frog.x, frog.y, 128) ||
-			truck4.isColliding(frog.x, frog.y, 128) 
+			truck4.isColliding(frog.x, frog.y, 128) ||
+			
+			(
+				!log.isColliding(frog.x, frog.y, 192) &&
+				!log2.isColliding(frog.x, frog.y, 192) &&
+				!log3.isColliding(frog.x, frog.y, 192) &&
+				
+				!mid.isColliding(frog.x, frog.y, 384) &&
+				!mid2.isColliding(frog.x, frog.y, 384) &&
+				!mid3.isColliding(frog.x, frog.y, 384) &&
+				
+				!top.isColliding(frog.x, frog.y, 256) &&
+				!top2.isColliding(frog.x, frog.y, 256) &&
+				!top3.isColliding(frog.x, frog.y, 256) &&
+				
+				!up.isColliding(frog.x, frog.y, 128) &&
+				!up2.isColliding(frog.x, frog.y, 128) &&
+				!up3.isColliding(frog.x, frog.y, 128) &&
+				
+				!down.isColliding(frog.x, frog.y, 192) &&
+				!down2.isColliding(frog.x, frog.y, 192) &&
+				!down3.isColliding(frog.x, frog.y, 192) &&
+				frog.y < 512 && frog.y > 128 ) ||
+			
+			frog.x < -64 || frog.x > 896
 		  ) {
 			if(!godMode)
 				frog.die();
@@ -368,6 +404,27 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		}
 	}
 	
+	public String drawscore()
+	{
+		int bob = score;
+		if(bob % 10 != 0)
+		{
+			bob = bob % 10;
+			cnt++;
+			System.out.println(cnt);
+		}
+		if(cnt == 2)
+			return scoredraw = "000" + score;
+		if(cnt == 3)
+			return scoredraw = "00" + score;
+		if(cnt == 4)
+			return scoredraw = "0" + score;
+		if(cnt == 5)
+			return scoredraw = ""  + score;
+		return "00000";
+		
+	}
+	
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -390,6 +447,8 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			frog.move(0, -moveDistance);
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.up.0.png");
+			score = score + 10;
+			steps ++;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
 			godMode = !godMode;
