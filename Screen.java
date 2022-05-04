@@ -350,7 +350,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			truck3.isColliding(frog.x, frog.y, 128) ||
 			truck4.isColliding(frog.x, frog.y, 128) ||
 			
-			frog.x < -64 || frog.x > 960
+			frog.x < -64 || frog.x > 896
 		  ) {
 			if(!godMode)
 				frog.die();
