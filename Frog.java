@@ -64,6 +64,7 @@ public class Frog {
 		System.out.println(lives);
 		x = 448;
 		y = 896;
+		Screen.halfSeconds = 60;
 	}
 	
 	public void reset() {

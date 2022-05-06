@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedWriter;
@@ -15,6 +17,8 @@ import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.Timer;
+
 import java.util.*;
 
 public class Screen extends JPanel implements Runnable , KeyListener
@@ -106,6 +110,9 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private Font BaseFont;
 	private Font ArcadeFont;
 	
+	public Timer TIME;
+	public static int halfSeconds;
+	
 	public Screen() throws FontFormatException, IOException
 	{
 		setBackground(Color.WHITE);
@@ -135,10 +142,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Car0 = new File("sprite\\Car.0.png");
 		
 		frog = new Frog(448, 896, 7, FrogIMG);
-		
-		addKeyListener( this );
-		setFocusable( true );
-		new Thread(this).start();
 		
 		log = new Log(0, 384, 1, 2);
 		log2 = new Log(384,384,1, 2);
@@ -184,6 +187,31 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		truck2 = new Car(500, 576, 5, 2, true);
 		truck3 = new Car(250, 576, 5, 2, true);
 		truck4 = new Car(0, 576, 5, 2, true);
+		
+		addKeyListener( this );
+		setFocusable( true );
+		new Thread(this).start();
+		
+		// TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		int delay = 500; //milliseconds
+		halfSeconds = 60;
+		ActionListener taskPerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//...Perform a task...
+				System.out.println("TIME: " + halfSeconds);
+				if(halfSeconds <= 0)
+				{
+					frog.die();
+				}
+				else
+				{
+					halfSeconds = halfSeconds - 1;
+				}
+			}
+		};
+		TIME = new Timer(delay, taskPerformer);
+		TIME.start();
+		
 	}
 	
 	public void paint( Graphics window )
@@ -282,6 +310,15 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		*/
 		
 		window.drawString("   " + String.format("%05d", score) + "   " + String.format("%05d", highscore), 0, 64);
+		
+		// TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		if(halfSeconds <= 10)
+			window.setColor(Color.RED);
+		else
+			window.setColor(Color.GREEN);
+		window.fillRect(768, 992, -(8 * halfSeconds), 32);
+		window.setColor(Color.YELLOW);
+		window.drawString("                        TIME", 0, 1024 );
 		
 		if(living = true)
 		{
@@ -408,26 +445,31 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		if(frog.y == 128 && frog.x >= 0 && frog.x <= 64) {
 			end1 = true;
 			frog.reset();
+			score = score + 50;
 		}
 		
 		if(frog.y == 128 && frog.x > 128 && frog.x <= 256) {
 			end2 = true;
 			frog.reset();
+			score = score + 50;
 		}
 		
 		if(frog.y == 128 && frog.x >= 384 && frog.x <= 448) {
 			end3 = true;
 			frog.reset();
+			score = score + 50;
 		}
 		
 		if(frog.y == 128 && frog.x >= 576 && frog.x <= 640) {
 			end4 = true;
 			frog.reset();
+			score = score + 50;
 		}
 		
 		if(frog.y == 128 && frog.x >= 768 && frog.x <= 832) {
 			end5 = true;
 			frog.reset();
+			score = score + 50;
 		}
 	}
 	
