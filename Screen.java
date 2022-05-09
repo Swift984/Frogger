@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.Timer;
+
 import java.util.*;
 
 public class Screen extends JPanel implements Runnable , KeyListener
@@ -36,14 +37,16 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Car1;
 	private File Car0;
 	private File Lives;
-	private File Fly;
-	
+	private int MouseX;
+	private int MouseY;
+	private int playerX, playerY;
 	private int score = 00000;
+	private int cnt;
+	private String scoredraw;
+	private int steps;
 	int scoreLast;
 	int highscore;
 
-	int level = 0;
-	int fly = 0;
 	private int moveDistance = 64;
 	
 	private Boolean keyDown = false;
@@ -106,9 +109,10 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File PressStart2P;
 	private Font BaseFont;
 	private Font ArcadeFont;
+	
 	public Timer TIME;
 	public static int halfSeconds;
-  
+	
 	public Screen() throws FontFormatException, IOException
 	{
 		setBackground(Color.WHITE);
@@ -128,7 +132,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Turtle1 = new File("sprite\\Turtle.1.0.png");
 		FrogIMG = new File("sprite\\Frog.up.0.png");
 		GoalFrogIMG = new File("sprite\\GoalFrog.0.png");
-		Fly = new File("sprite\\GoalFly.png");
 
 		Lives = new File("sprite\\1-Up.png");
 		
@@ -139,11 +142,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Car0 = new File("sprite\\Car.0.png");
 		
 		frog = new Frog(448, 896, 7, FrogIMG);
-    
-		addKeyListener( this );
-		setFocusable( true );
-		new Thread(this).start();
-    
+		
 		log = new Log(0, 384, 1, 2);
 		log2 = new Log(384,384,1, 2);
 		log3 = new Log(768,384,1, 2);
@@ -188,7 +187,8 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		truck2 = new Car(500, 576, 5, 2, true);
 		truck3 = new Car(250, 576, 5, 2, true);
 		truck4 = new Car(0, 576, 5, 2, true);
-	addKeyListener( this );
+		
+		addKeyListener( this );
 		setFocusable( true );
 		new Thread(this).start();
 		
@@ -211,6 +211,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		};
 		TIME = new Timer(delay, taskPerformer);
 		TIME.start();
+		
 	}
 	
 	public void paint( Graphics window )
@@ -282,26 +283,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			if(end5)
 			window.drawImage(ImageIO.read(GoalFrogIMG), 800, 128, 64, 64, null);
 			
-			chooseFly();
-			
-			switch(fly) { // set fly
-			case 1:
-				window.drawImage(ImageIO.read(Fly), 32, 128, 64, 64, null);
-				break;
-			case 2:
-				window.drawImage(ImageIO.read(Fly), 225, 128, 64, 64, null);
-				break;
-			case 3:
-				window.drawImage(ImageIO.read(Fly), 416, 128, 64, 64, null);
-				break;
-			case 4:
-				window.drawImage(ImageIO.read(Fly), 608, 128, 64, 64, null);
-				break;
-			case 5:
-				window.drawImage(ImageIO.read(Fly), 800, 128, 64, 64, null);
-				break;
-				
-			}
 			
 			for(int liveX = 0; liveX < (32 * frog.getLives()) - 32; liveX += 32) {
 				window.drawImage(ImageIO.read(Lives), liveX, 960, 32, 32, null);
@@ -329,7 +310,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		*/
 		
 		window.drawString("   " + String.format("%05d", score) + "   " + String.format("%05d", highscore), 0, 64);
-
+		
 		// TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if(halfSeconds <= 10)
 			window.setColor(Color.RED);
@@ -339,7 +320,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.setColor(Color.YELLOW);
 		window.drawString("                        TIME", 0, 1024 );
 		
-
 		if(living = true)
 		{
 			log.slide();
@@ -461,76 +441,60 @@ public class Screen extends JPanel implements Runnable , KeyListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-      
-		// Goal Detection
 		
 		if(frog.y == 128 && frog.x >= 0 && frog.x <= 64) {
-			end1 = true;
-			score += 50;
-			frog.reset();
+			if(end1 == false)
+			{
+				end1 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else
+				frog.die();
 		}
 		
 		if(frog.y == 128 && frog.x > 128 && frog.x <= 256) {
-			end2 = true;
-			score += 50;
-			frog.reset();
+			if(end2 == false)
+			{
+				end2 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else
+				frog.die();
 		}
 		
 		if(frog.y == 128 && frog.x >= 384 && frog.x <= 448) {
-			end3 = true;
-			score += 50;
-			frog.reset();
+			if(end3 == false)
+			{
+				end3 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else
+				frog.die();
 		}
 		
 		if(frog.y == 128 && frog.x >= 576 && frog.x <= 640) {
-			end4 = true;
-			score += 50;
-			frog.reset();
+			if(end4 == false)
+			{
+				end4 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else
+				frog.die();
 		}
 		
 		if(frog.y == 128 && frog.x >= 768 && frog.x <= 832) {
-			end5 = true;
-			score += 50;
-			frog.reset();
-		}
-	
-		if(end1 && end2 && end3 && end4 && end5) { // Reset all goals and give 1000 points 
-			end1 = false;
-			end2 = false;
-			end3 = false;
-			end4 = false;
-			end5 = false;
-			
-			score += 1000;
-			level++;
-		}
-		
-		
-	}
-	
-	public void chooseFly() {
-		Random rand = new Random();
-		fly = 0;
-		
-		if(!end1 && fly == 0) {
-			if(rand.nextInt(2) == 1)
-				fly = 1;
-		}
-		if(!end2 && fly == 0) {
-			if(rand.nextInt(2) == 1)
-				fly = 2;
-		}
-		if(!end3 && fly == 0) {
-			if(rand.nextInt(2) == 1)
-				fly = 3;
-		}
-		if(!end4 && fly == 0) {
-			if(rand.nextInt(2) == 1)
-				fly = 4;
-		}
-		if(!end5 && fly == 0) {
-			if(rand.nextInt(2) == 1)
-				fly = 5;
+			if(end5 == false)
+			{
+				end5 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else
+				frog.die();
 		}
 	}
 	
@@ -562,6 +526,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			keyDown = true;
 			FrogIMG = new File("sprite\\Frog.up.0.png");
 			score = score + 10;
+			steps ++;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
 			godMode = !godMode;

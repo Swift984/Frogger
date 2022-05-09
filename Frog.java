@@ -70,6 +70,7 @@ public class Frog {
 	public void reset() {
 		x = 448;
 		y = 896;
+		Screen.halfSeconds = 60;
 	}
 	
 	public Boolean checkPos(int mX, int x, int y) {
