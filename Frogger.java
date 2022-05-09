@@ -21,6 +21,7 @@ public class Frogger extends JFrame
 		getContentPane().add(new Screen() );
 		
 		setVisible(true);	
+
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
