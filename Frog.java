@@ -3,7 +3,6 @@ import java.io.File;
 public class Frog {
 	public int x,y;
 	public File sprite;
-	
 	private int lives;
 	
 	public Frog(int xx, int yy, int l, File s) {
@@ -13,15 +12,45 @@ public class Frog {
 		lives = l;
 	}
 	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public void changeX(int a)
+	{
+		x = a;
+	}
+	
+	public int getY()
+	{
+		return y;
+	}
+	
+	public void changeY(int b)
+	{
+		y = b;
+	}
+	
+	public void slide(int s)
+	{
+		x = x + s;
+	}
+	
 	public int getLives() {
 		return lives;
 	}
 	
 	public void move(int xx, int yy) {
-		if(x + xx >= 0 && x + xx <= (Frogger.WIDTH - 64))
+		if(x + xx >= 0 && x + xx <= (224*4 - 64))
 			x += xx;
-		if(y + yy >= 0 && y + yy <= (Frogger.HEIGHT - 64) && !checkPos(0, 24, 192) && !checkPos(50, 216, 192) && !checkPos(484, 600, 192) && !checkPos(74*4, 101*4, 192) && !checkPos(169*4, 197*4, 192) && !checkPos(217*4, 223*4, 196))
-			y += yy;
+		if(y + yy >= 0 && y + yy <= (256*4 - 128))
+		{
+			if(yy < 0  && !checkPos(0, 0, 192) && !checkPos(64, 192, 192) && !checkPos(256, 384, 192) && !checkPos(448, 576, 192) && !checkPos(640, 768, 192) && !checkPos(832, 896, 196))
+				y += yy;
+			else if(yy > 0)
+				y += yy;
+		}
 		
 		System.out.println(x + ", " + y);
 	}
@@ -36,7 +65,6 @@ public class Frog {
 		x = 448;
 		y = 896;
 	}
-
 	
 	public void reset() {
 		x = 448;

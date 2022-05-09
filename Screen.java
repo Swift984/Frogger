@@ -1,11 +1,21 @@
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.util.*;
 
 public class Screen extends JPanel implements Runnable , KeyListener
 {
@@ -17,19 +27,20 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Turtle1;
 	private File FrogIMG;
 	private File GoalFrogIMG;
-
 	private File Car4;
 	private File Car3;
 	private File Car2;
 	private File Car1;
 	private File Car0;
 	private File Lives;
+	private File Fly;
+	
+	private int score = 00000;
+	int scoreLast;
+	int highscore;
 
-	private int MouseX;
-	private int MouseY;
-	private int playerX, playerY;
-	private int score = 0;
-
+	int level = 0;
+	int fly = 0;
 	private int moveDistance = 64;
 	
 	private Boolean keyDown = false;
@@ -97,6 +108,9 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	{
 		setBackground(Color.WHITE);
 		
+		highscore = Integer.parseInt(Files.readAllLines(Paths.get("score")).get(0));
+		System.out.println("Highscore: " + highscore);
+		
 		PressStart2P = new File("PressStart2P.ttf");
 		BaseFont = Font.createFont( Font.TRUETYPE_FONT, PressStart2P);
 		ArcadeFont = BaseFont.deriveFont(0, 32);
@@ -109,6 +123,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Turtle1 = new File("sprite\\Turtle.1.0.png");
 		FrogIMG = new File("sprite\\Frog.up.0.png");
 		GoalFrogIMG = new File("sprite\\GoalFrog.0.png");
+		Fly = new File("sprite\\GoalFly.png");
 
 		Lives = new File("sprite\\1-Up.png");
 		
@@ -124,50 +139,50 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		setFocusable( true );
 		new Thread(this).start();
 		
-		log = new Log(0, 384, 1);
-		log2 = new Log(384,384,1);
-		log3 = new Log(768,384,1);
+		log = new Log(0, 384, 1, 2);
+		log2 = new Log(384,384,1, 2);
+		log3 = new Log(768,384,1, 2);
 		
-		mid = new Log(0, 320, 2);
-		mid2 = new Log(448, 320, 2);	// im so fucking tired i can't comprehend this shit anymore
-		mid3 = new Log(960, 320, 2);
+		mid = new Log(0, 320, 2, 6);
+		mid2 = new Log(448, 320, 2, 6);
+		mid3 = new Log(960, 320, 2, 6);
 		
-		top = new Log(0, 192, 3);
-		top2 = new Log(384, 192, 3);
-		top3 = new Log(768, 192, 3);
+		top = new Log(0, 192, 3, 4);
+		top2 = new Log(384, 192, 3, 4);
+		top3 = new Log(768, 192, 3, 4);
 		
-		up = new Turtle(900, 256,2);
-		up2 = new Turtle(625, 256,2);
-		up3 = new Turtle(300, 256,2);
+		up = new Turtle(900, 256, 2, 8);
+		up2 = new Turtle(625, 256, 2, 8);
+		up3 = new Turtle(300, 256, 2, 8);
 		
-		down = new Turtle(900, 448,1);
-		down2 = new Turtle(625, 448,1);
-		down3 = new Turtle(300, 448,1);
+		down = new Turtle(900, 448, 1, 6);
+		down2 = new Turtle(625, 448, 1, 6);
+		down3 = new Turtle(300, 448, 1, 6);
 		
-		car1 = new Car(800, 832, 1, true);
-		car2 = new Car(500, 832, 1, true);
-		car3 = new Car(250, 832, 1, true);
-		car4 = new Car(0, 832, 1, true);
+		car1 = new Car(800, 832, 1, 5, true);
+		car2 = new Car(500, 832, 1, 5, true);
+		car3 = new Car(250, 832, 1, 5, true);
+		car4 = new Car(0, 832, 1, 5, true);
 		
-		tractor1 = new Car(800, 768, 2, false);
-		tractor2 = new Car(500, 768, 2, false);
-		tractor3 = new Car(250, 768, 2, false);
-		tractor4 = new Car(0, 768, 2, false);
+		tractor1 = new Car(800, 768, 2, 3, false);
+		tractor2 = new Car(500, 768, 2, 3, false);
+		tractor3 = new Car(250, 768, 2, 3, false);
+		tractor4 = new Car(0, 768, 2, 3, false);
 		
-		car5 = new Car(800, 704, 3, true);
-		car6 = new Car(500, 704, 3, true);
-		car7 = new Car(250, 704, 3, true);
-		car8 = new Car(0, 704, 3, true);
+		car5 = new Car(800, 704, 3, 3, true);
+		car6 = new Car(500, 704, 3, 3, true);
+		car7 = new Car(250, 704, 3, 3, true);
+		car8 = new Car(0, 704, 3, 3, true);
 		
-		racecar1 = new Car(800, 640, 4, false);
-		racecar2 = new Car(500, 640, 4, false);
-		racecar3 = new Car(250, 640, 4, false);
-		racecar4 = new Car(0, 640, 4, false);
+		racecar1 = new Car(800, 640, 4, 15, false);
+		racecar2 = new Car(500, 640, 4, 15, false);
+		racecar3 = new Car(250, 640, 4, 15, false);
+		racecar4 = new Car(0, 640, 4, 15, false);
 		
-		truck1 = new Car(800, 576, 5, true);
-		truck2 = new Car(500, 576, 5, true);
-		truck3 = new Car(250, 576, 5, true);
-		truck4 = new Car(0, 576, 5, true);
+		truck1 = new Car(800, 576, 5, 2, true);
+		truck2 = new Car(500, 576, 5, 2, true);
+		truck3 = new Car(250, 576, 5, 2, true);
+		truck4 = new Car(0, 576, 5, 2, true);
 	}
 	
 	public void paint( Graphics window )
@@ -175,7 +190,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.clearRect( 0,0, WIDTH, HEIGHT);
 		try {
 			window.drawImage(ImageIO.read(Screen), 0, 0, 224*4, 256*4, null);
-			
 			
 			window.drawImage(ImageIO.read(Log0), log.getX(), log.getY(), 192, 64, null);
 			window.drawImage(ImageIO.read(Log0), log2.getX(), log2.getY(), 192, 64, null);
@@ -240,6 +254,27 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			if(end5)
 			window.drawImage(ImageIO.read(GoalFrogIMG), 800, 128, 64, 64, null);
 			
+			chooseFly();
+			
+			switch(fly) { // set fly
+			case 1:
+				window.drawImage(ImageIO.read(Fly), 32, 128, 64, 64, null);
+				break;
+			case 2:
+				window.drawImage(ImageIO.read(Fly), 225, 128, 64, 64, null);
+				break;
+			case 3:
+				window.drawImage(ImageIO.read(Fly), 416, 128, 64, 64, null);
+				break;
+			case 4:
+				window.drawImage(ImageIO.read(Fly), 608, 128, 64, 64, null);
+				break;
+			case 5:
+				window.drawImage(ImageIO.read(Fly), 800, 128, 64, 64, null);
+				break;
+				
+			}
+			
 			
 			for(int liveX = 0; liveX < (32 * frog.getLives()) - 32; liveX += 32) {
 				window.drawImage(ImageIO.read(Lives), liveX, 960, 32, 32, null);
@@ -254,7 +289,19 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.setColor(Color.WHITE);
 		window.drawString("    1-UP  HI-SCORE          ", 0, 32 );
 		window.setColor(Color.RED);
-		window.drawString("   00000   00000            ", 0, 64 );
+		/*if(steps == 0)
+			window.drawString("   00000   00000            ", 0, 64 );
+		if(steps < 10 && steps > 0)
+			window.drawString("   000" + score + "   00000            ", 0, 64 );
+		if(steps < 100 && steps >= 10)
+			window.drawString("   00" + score + "   00000            ", 0, 64 );
+		if(steps < 1000 && steps >= 100)
+			window.drawString("   0" + score + "   00000            ", 0, 64 );
+		if(steps < 10000 && steps >= 1000)
+			window.drawString("   " + score + "   00000            ", 0, 64 );
+		*/
+		
+		window.drawString("   " + String.format("%05d", score) + "   " + String.format("%05d", highscore), 0, 64);
 		
 		if(living = true)
 		{
@@ -302,6 +349,17 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			truck2.slide();
 			truck3.slide();
 			truck4.slide();
+			
+			if(frog.getY() == 448)
+				frog.slide(-down.getSpeed());
+			if(frog.getY() == 384)
+				frog.slide(log.getSpeed());
+			if(frog.getY() == 320)
+				frog.slide(mid.getSpeed());
+			if(frog.getY() == 256)
+				frog.slide(-up.getSpeed());
+			if(frog.getY() == 192)
+				frog.slide(top.getSpeed());
 		}
 		
 		// Collision Detection
@@ -328,61 +386,165 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			truck1.isColliding(frog.x, frog.y, 128) ||
 			truck2.isColliding(frog.x, frog.y, 128) ||
 			truck3.isColliding(frog.x, frog.y, 128) ||
-			truck4.isColliding(frog.x, frog.y, 128) 
+			truck4.isColliding(frog.x, frog.y, 128) ||
+			
+			(
+				!log.isColliding(frog.x, frog.y, 192) &&
+				!log2.isColliding(frog.x, frog.y, 192) &&
+				!log3.isColliding(frog.x, frog.y, 192) &&
+				
+				!mid.isColliding(frog.x, frog.y, 384) &&
+				!mid2.isColliding(frog.x, frog.y, 384) &&
+				!mid3.isColliding(frog.x, frog.y, 384) &&
+				
+				!top.isColliding(frog.x, frog.y, 256) &&
+				!top2.isColliding(frog.x, frog.y, 256) &&
+				!top3.isColliding(frog.x, frog.y, 256) &&
+				
+				!up.isColliding(frog.x, frog.y, 128) &&
+				!up2.isColliding(frog.x, frog.y, 128) &&
+				!up3.isColliding(frog.x, frog.y, 128) &&
+				
+				!down.isColliding(frog.x, frog.y, 192) &&
+				!down2.isColliding(frog.x, frog.y, 192) &&
+				!down3.isColliding(frog.x, frog.y, 192) &&
+				frog.y < 512 && frog.y > 128 ) ||
+			
+			frog.x < -64 || frog.x > 896
 		  ) {
 			if(!godMode)
 				frog.die();
 		}
 		
+		if(score > highscore)
+			try {
+				highscore = score;
+				saveScore(score);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		// Goal Detection
+		
 		if(frog.y == 128 && frog.x >= 0 && frog.x <= 64) {
 			end1 = true;
+			score += 50;
 			frog.reset();
 		}
 		
 		if(frog.y == 128 && frog.x > 128 && frog.x <= 256) {
 			end2 = true;
+			score += 50;
 			frog.reset();
 		}
 		
 		if(frog.y == 128 && frog.x >= 384 && frog.x <= 448) {
 			end3 = true;
+			score += 50;
 			frog.reset();
 		}
 		
 		if(frog.y == 128 && frog.x >= 576 && frog.x <= 640) {
 			end4 = true;
+			score += 50;
 			frog.reset();
 		}
 		
 		if(frog.y == 128 && frog.x >= 768 && frog.x <= 832) {
 			end5 = true;
+			score += 50;
 			frog.reset();
+		}
+	
+		if(end1 && end2 && end3 && end4 && end5) { // Reset all goals and give 1000 points 
+			end1 = false;
+			end2 = false;
+			end3 = false;
+			end4 = false;
+			end5 = false;
+			
+			score += 1000;
+			level++;
+		}
+		
+		
+	}
+	
+	public void chooseFly() {
+		Random rand = new Random();
+		fly = 0;
+		
+		if(!end1 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 1;
+		}
+		if(!end2 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 2;
+		}
+		if(!end3 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 3;
+		}
+		if(!end4 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 4;
+		}
+		if(!end5 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 5;
 		}
 	}
 	
+	public void saveScore(int s) throws IOException {
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("score"), "utf-8"))) {
+			writer.write("" + s);
+		}
+	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if((e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) && keyDown == false) {
 			frog.move(-moveDistance, 0);
 			keyDown = true;
+			FrogIMG = new File("sprite\\Frog.left.0.png");
 		}
 		if((e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) && keyDown == false) {
 			frog.move(moveDistance, 0);
 			keyDown = true;
+			FrogIMG = new File("sprite\\Frog.right.0.png");
 		}
 		if((e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && keyDown == false) {
 			frog.move(0, moveDistance);
 			keyDown = true;
+			FrogIMG = new File("sprite\\Frog.down.0.png");
 		}
 		if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && keyDown == false)) {
 			frog.move(0, -moveDistance);
 			keyDown = true;
+			FrogIMG = new File("sprite\\Frog.up.0.png");
+			score = score + 10;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
 			godMode = !godMode;
 			System.out.println("God Mode: " + godMode);
 		}
+		if(e.getKeyCode() == KeyEvent.VK_F6) {
+			score += 100;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_F7) {
+			score = 0;
+			highscore = 0;
+			
+			try {
+				saveScore(0);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
 	}
 	
 	@Override

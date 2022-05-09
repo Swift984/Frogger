@@ -10,13 +10,14 @@ public class Log {
 	private int logX;
 	private int logY;
 	private int height;
+	private int speed;
 	
-	Log(int x, int y, int h)
+	Log(int x, int y, int h, int s)
 	{
 		logX = x;
 		logY = y;
 		height = h;
-		
+		speed = s;
 	}
 	
 	public int getX()
@@ -24,12 +25,6 @@ public class Log {
 		return logX;
 	}
 	
-	public int getHeight()
-	{
-		return height;
-	}
-	
-
 	public void changeX(int x)
 	{
 		logX = x;
@@ -40,10 +35,19 @@ public class Log {
 		return logY;
 	}
 	
-
 	public void changeY(int y)
 	{
 		logY = y;
+	}
+	
+	public int getHeight()
+	{
+		return height;
+	}
+	
+	public int getSpeed()
+	{
+		return speed;
 	}
 	
 	public void Returntoleft()
@@ -63,14 +67,22 @@ public class Log {
 				Returntoleft();
 			
 			if(height == 1)
-				logX = logX + 2;
+				logX = logX + speed;
 			if(height == 2)
-				logX = logX + 6;
+				logX = logX + speed;
 			if(height == 3)
-				logX = logX + 4;
+				logX = logX + speed;
 		
 	}
 	
-	
+	public Boolean isColliding(int fX, int fY, int size) {
+		
+		int xPadding = 32;
+		
+		if((fX - logX + xPadding) > 0 && (fX - logX + xPadding) <= size && logY == fY)
+			return true;
+		
+		return false;
+	}
 	
 }
