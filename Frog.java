@@ -7,7 +7,6 @@ public class Frog {
 	public int x,y;
 	public File sprite;
 	private int lives;
-	private File Death = new File("sprite\\Death.0.png");
 	private Timer DeathAnimation;
 	private int Aframe = 0;
 	
