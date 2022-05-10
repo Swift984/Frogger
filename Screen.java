@@ -29,7 +29,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Log2;
 	private File Turtle0;
 	private File Turtle1;
-	private File FrogIMG;
+	private File FrogIMG; // might kill later
 	private File GoalFrogIMG;
 	private File Fly;
 	private File Car4;
@@ -46,7 +46,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private int moveDistance = 64;
 	
 	private Boolean keyDown = false;
-	private Boolean godMode = false;
+	public static Boolean godMode = false;
 	private Boolean living = true;
 	
 	private Boolean end1 = false;
@@ -106,7 +106,8 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private Font BaseFont;
 	private Font ArcadeFont;
 	
-	public Timer TIME;
+
+	public static Timer TIME;
 	public static int halfSeconds;
 	
 	Random rand;
@@ -131,7 +132,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Log2 = new File("sprite\\Log.2.png");
 		Turtle0 = new File("sprite\\Turtle.0.0.png");
 		Turtle1 = new File("sprite\\Turtle.1.0.png");
-		FrogIMG = new File("sprite\\Frog.up.0.png");
 		GoalFrogIMG = new File("sprite\\GoalFrog.0.png");
 		Fly = new File("sprite\\GoalFly.png");
 
@@ -144,6 +144,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Car0 = new File("sprite\\Car.0.png");
 		
 		frog = new Frog(448, 896, 7, null);
+		frog.sprite = new File("sprite\\Frog.up.0.png");
 		
 		log = new Log(0, 384, 1, 2);
 		log2 = new Log(384,384,1, 2);
@@ -198,7 +199,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		
 		// TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		int delay = 500; //milliseconds
-
 		halfSeconds = 60;
 		ActionListener taskPerformer = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -211,7 +211,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 					System.out.println("FlyTime: " + flyTime);
 					flyLifetime = 0;
 				}
-				
 				
 				System.out.println("TIME: " + halfSeconds);
 				
@@ -227,6 +226,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		};
 		TIME = new Timer(delay, taskPerformer);
 		TIME.start();
+		
 	}
 	
 	public void paint( Graphics window )
@@ -280,7 +280,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			window.drawImage(ImageIO.read(Car0), car3.getX(), car3.getY(), 64, 64, null);
 			window.drawImage(ImageIO.read(Car0), car4.getX(), car4.getY(), 64, 64, null);
 			
-			window.drawImage(ImageIO.read(FrogIMG), frog.x, frog.y, 64, 64, null);
+			window.drawImage(ImageIO.read(frog.sprite), frog.x, frog.y, 64, 64, null);
 			
 			//End Frogs
 			if(end1)
@@ -485,7 +485,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 					chooseFly();
 					score += 200; // Add animation
 				}
-			} else 
+			} else if(end1 == true && godMode == false)
 				frog.die();
 		}
 		
@@ -499,7 +499,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 					chooseFly();
 					score += 200; // Add animation
 				}
-			} else 
+			} else if(end2 == true && godMode == false)
 				frog.die();
 		}
 		
@@ -513,7 +513,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 					chooseFly();
 					score += 200; // Add animation
 				}
-			} else 
+			} else if(end3 == true && godMode == false)
 				frog.die();
 		}
 		
@@ -527,7 +527,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 					chooseFly();
 					score += 200; // Add animation
 				}
-			} else 
+			} else if(end4 == true && godMode == false)
 				frog.die();
 		}
 		
@@ -541,7 +541,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 					chooseFly();
 					score += 200; // Add animation
 				}
-			} else 
+			} else if(end5 == true && godMode == false)
 				frog.die();
 		}
 	
@@ -591,26 +591,30 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if((e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) && keyDown == false) {
-			frog.move(-moveDistance, 0);
-			keyDown = true;
-			FrogIMG = new File("sprite\\Frog.left.0.png");
-		}
-		if((e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) && keyDown == false) {
-			frog.move(moveDistance, 0);
-			keyDown = true;
-			FrogIMG = new File("sprite\\Frog.right.0.png");
-		}
-		if((e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && keyDown == false) {
-			frog.move(0, moveDistance);
-			keyDown = true;
-			FrogIMG = new File("sprite\\Frog.down.0.png");
-		}
-		if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && keyDown == false)) {
-			frog.move(0, -moveDistance);
-			keyDown = true;
-			FrogIMG = new File("sprite\\Frog.up.0.png");
-			score = score + 10;
+		if(TIME.isRunning())
+		{
+			if((e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) && keyDown == false) {
+				frog.move(-moveDistance, 0);
+				keyDown = true;
+				frog.sprite = new File("sprite\\Frog.left.0.png");
+			}
+			if((e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) && keyDown == false) {
+				frog.move(moveDistance, 0);
+				keyDown = true;
+				frog.sprite = new File("sprite\\Frog.right.0.png");
+			}
+			if((e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && keyDown == false) {
+				frog.move(0, moveDistance);
+				keyDown = true;
+				frog.sprite = new File("sprite\\Frog.down.0.png");
+			}
+			if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && keyDown == false)) {
+				frog.move(0, -moveDistance);
+				keyDown = true;
+				frog.sprite = new File("sprite\\Frog.up.0.png");
+				score = score + 10;
+				steps ++;
+			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
 			godMode = !godMode;
