@@ -1,9 +1,15 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.Timer;
 
 public class Frog {
 	public int x,y;
 	public File sprite;
 	private int lives;
+	private File Death = new File("sprite\\Death.0.png");
+	private Timer DeathAnimation;
+	private int Aframe = 0;
 	
 	public Frog(int xx, int yy, int l, File s) {
 		x = xx;
@@ -62,13 +68,41 @@ public class Frog {
 	public void die() {
 		lives--;
 		System.out.println(lives);
-		x = 448;
-		y = 896;
+		Screen.godMode = true;
+		Screen.TIME.stop();
+		
+		Aframe = 0;
+		ActionListener taskPerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//...Perform a task...
+				if(Aframe < 7)
+				{
+					sprite = new File("sprite\\Death." + Aframe + ".png");
+					Aframe = Aframe+1;
+				}
+				else
+				{
+					Aframe = 0;
+					sprite = new File("sprite\\Frog.up.0.png");
+					DeathAnimation.stop();
+					
+					x = 448;
+					y = 896;
+					Screen.godMode = false;
+					Screen.halfSeconds = 60;
+					Screen.TIME.start();
+				}
+			}
+		};
+		DeathAnimation = new Timer(200, taskPerformer);
+		DeathAnimation.start();
+		
 	}
 	
 	public void reset() {
 		x = 448;
 		y = 896;
+		Screen.halfSeconds = 60;
 	}
 	
 	public Boolean checkPos(int mX, int x, int y) {

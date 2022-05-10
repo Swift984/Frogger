@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedWriter;
@@ -15,6 +17,8 @@ import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.Timer;
+
 import java.util.*;
 
 public class Screen extends JPanel implements Runnable , KeyListener
@@ -25,7 +29,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Log2;
 	private File Turtle0;
 	private File Turtle1;
-	private File FrogIMG;
+	private File FrogIMG; // might kill later
 	private File GoalFrogIMG;
 	private File Car4;
 	private File Car3;
@@ -46,7 +50,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private int moveDistance = 64;
 	
 	private Boolean keyDown = false;
-	private Boolean godMode = false;
+	public static Boolean godMode = false;
 	private Boolean living = true;
 	
 	private Boolean end1 = false;
@@ -106,6 +110,9 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private Font BaseFont;
 	private Font ArcadeFont;
 	
+	public static Timer TIME;
+	public static int halfSeconds;
+	
 	public Screen() throws FontFormatException, IOException
 	{
 		setBackground(Color.WHITE);
@@ -123,7 +130,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Log2 = new File("sprite\\Log.2.png");
 		Turtle0 = new File("sprite\\Turtle.0.0.png");
 		Turtle1 = new File("sprite\\Turtle.1.0.png");
-		FrogIMG = new File("sprite\\Frog.up.0.png");
 		GoalFrogIMG = new File("sprite\\GoalFrog.0.png");
 
 		Lives = new File("sprite\\1-Up.png");
@@ -134,11 +140,8 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Car1 = new File("sprite\\Car.1.png");
 		Car0 = new File("sprite\\Car.0.png");
 		
-		frog = new Frog(448, 896, 7, FrogIMG);
-		
-		addKeyListener( this );
-		setFocusable( true );
-		new Thread(this).start();
+		frog = new Frog(448, 896, 7, null);
+		frog.sprite = new File("sprite\\Frog.up.0.png");
 		
 		log = new Log(0, 384, 1, 2);
 		log2 = new Log(384,384,1, 2);
@@ -184,6 +187,31 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		truck2 = new Car(500, 576, 5, 2, true);
 		truck3 = new Car(250, 576, 5, 2, true);
 		truck4 = new Car(0, 576, 5, 2, true);
+		
+		addKeyListener( this );
+		setFocusable( true );
+		new Thread(this).start();
+		
+		// TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		int delay = 500; //milliseconds
+		halfSeconds = 60;
+		ActionListener taskPerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//...Perform a task...
+				System.out.println("TIME: " + halfSeconds);
+				if(halfSeconds <= 0)
+				{
+					frog.die();
+				}
+				else
+				{
+					halfSeconds = halfSeconds - 1;
+				}
+			}
+		};
+		TIME = new Timer(delay, taskPerformer);
+		TIME.start();
+		
 	}
 	
 	public void paint( Graphics window )
@@ -237,7 +265,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			window.drawImage(ImageIO.read(Car0), car3.getX(), car3.getY(), 64, 64, null);
 			window.drawImage(ImageIO.read(Car0), car4.getX(), car4.getY(), 64, 64, null);
 			
-			window.drawImage(ImageIO.read(FrogIMG), frog.x, frog.y, 64, 64, null);
+			window.drawImage(ImageIO.read(frog.sprite), frog.x, frog.y, 64, 64, null);
 			
 			//End Frogs
 			if(end1)
@@ -282,6 +310,15 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		*/
 		
 		window.drawString("   " + String.format("%05d", score) + "   " + String.format("%05d", highscore), 0, 64);
+		
+		// TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		if(halfSeconds <= 10)
+			window.setColor(Color.RED);
+		else
+			window.setColor(Color.GREEN);
+		window.fillRect(768, 992, -(8 * halfSeconds), 32);
+		window.setColor(Color.YELLOW);
+		window.drawString("                        TIME", 0, 1024 );
 		
 		if(living = true)
 		{
@@ -406,28 +443,58 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			}
 		
 		if(frog.y == 128 && frog.x >= 0 && frog.x <= 64) {
-			end1 = true;
-			frog.reset();
+			if(end1 == false)
+			{
+				end1 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else if(end1 == true && godMode == false)
+				frog.die();
 		}
 		
 		if(frog.y == 128 && frog.x > 128 && frog.x <= 256) {
-			end2 = true;
-			frog.reset();
+			if(end2 == false)
+			{
+				end2 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else if(end2 == true && godMode == false)
+				frog.die();
 		}
 		
 		if(frog.y == 128 && frog.x >= 384 && frog.x <= 448) {
-			end3 = true;
-			frog.reset();
+			if(end3 == false)
+			{
+				end3 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else if(end3 == true && godMode == false)
+				frog.die();
 		}
 		
 		if(frog.y == 128 && frog.x >= 576 && frog.x <= 640) {
-			end4 = true;
-			frog.reset();
+			if(end4 == false)
+			{
+				end4 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else if(end4 == true && godMode == false)
+				frog.die();
 		}
 		
 		if(frog.y == 128 && frog.x >= 768 && frog.x <= 832) {
-			end5 = true;
-			frog.reset();
+			if(end5 == false)
+			{
+				end5 = true;
+				frog.reset();
+				score = score + 50;
+			}
+			else if(end5 == true && godMode == false)
+				frog.die();
 		}
 	}
 	
@@ -439,27 +506,30 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if((e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) && keyDown == false) {
-			frog.move(-moveDistance, 0);
-			keyDown = true;
-			FrogIMG = new File("sprite\\Frog.left.0.png");
-		}
-		if((e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) && keyDown == false) {
-			frog.move(moveDistance, 0);
-			keyDown = true;
-			FrogIMG = new File("sprite\\Frog.right.0.png");
-		}
-		if((e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && keyDown == false) {
-			frog.move(0, moveDistance);
-			keyDown = true;
-			FrogIMG = new File("sprite\\Frog.down.0.png");
-		}
-		if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && keyDown == false)) {
-			frog.move(0, -moveDistance);
-			keyDown = true;
-			FrogIMG = new File("sprite\\Frog.up.0.png");
-			score = score + 10;
-			steps ++;
+		if(TIME.isRunning())
+		{
+			if((e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) && keyDown == false) {
+				frog.move(-moveDistance, 0);
+				keyDown = true;
+				frog.sprite = new File("sprite\\Frog.left.0.png");
+			}
+			if((e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) && keyDown == false) {
+				frog.move(moveDistance, 0);
+				keyDown = true;
+				frog.sprite = new File("sprite\\Frog.right.0.png");
+			}
+			if((e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && keyDown == false) {
+				frog.move(0, moveDistance);
+				keyDown = true;
+				frog.sprite = new File("sprite\\Frog.down.0.png");
+			}
+			if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP && keyDown == false)) {
+				frog.move(0, -moveDistance);
+				keyDown = true;
+				frog.sprite = new File("sprite\\Frog.up.0.png");
+				score = score + 10;
+				steps ++;
+			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
 			godMode = !godMode;
