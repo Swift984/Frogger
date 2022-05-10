@@ -18,10 +18,9 @@ import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.Timer;
-
 import java.util.*;
 
-public class Screen extends JPanel implements Runnable , KeyListener
+public class ScreenOld extends JPanel implements Runnable , KeyListener
 {
 	private File Screen;
 	private File Log0;
@@ -31,18 +30,20 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Turtle1;
 	private File FrogIMG;
 	private File GoalFrogIMG;
-	private File Fly;
 	private File Car4;
 	private File Car3;
 	private File Car2;
 	private File Car1;
 	private File Car0;
 	private File Lives;
-	int score = 00000;
-	int fly = 0;
+	private File Fly;
+	
+	private int score = 00000;
 	int scoreLast;
 	int highscore;
 
+	int level = 0;
+	int fly = 0;
 	private int moveDistance = 64;
 	
 	private Boolean keyDown = false;
@@ -105,16 +106,10 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File PressStart2P;
 	private Font BaseFont;
 	private Font ArcadeFont;
-	
 	public Timer TIME;
 	public static int halfSeconds;
-	
-	Random rand;
-	
-	int flyLifetime = 0; // Amount fly has been alive
-	int flyTime = 2; // Half seconds (20s / 2 = 10s)
-	
-	public Screen() throws FontFormatException, IOException
+  
+	public ScreenOld() throws FontFormatException, IOException
 	{
 		setBackground(Color.WHITE);
 		
@@ -143,8 +138,12 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		Car1 = new File("sprite\\Car.1.png");
 		Car0 = new File("sprite\\Car.0.png");
 		
-		frog = new Frog(448, 896, 7, null);
-		
+		frog = new Frog(448, 896, 7, FrogIMG);
+    
+		addKeyListener( this );
+		setFocusable( true );
+		new Thread(this).start();
+    
 		log = new Log(0, 384, 1, 2);
 		log2 = new Log(384,384,1, 2);
 		log3 = new Log(768,384,1, 2);
@@ -189,32 +188,17 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		truck2 = new Car(500, 576, 5, 2, true);
 		truck3 = new Car(250, 576, 5, 2, true);
 		truck4 = new Car(0, 576, 5, 2, true);
-		
-		rand = new Random();
-		
-		addKeyListener( this );
+	addKeyListener( this );
 		setFocusable( true );
 		new Thread(this).start();
 		
 		// TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		int delay = 500; //milliseconds
-
 		halfSeconds = 60;
 		ActionListener taskPerformer = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//...Perform a task...
-				flyLifetime++;
-				
-				if(flyLifetime > flyTime) {
-					chooseFly();
-					flyTime = rand.nextInt(15) + 5;
-					System.out.println("FlyTime: " + flyTime);
-					flyLifetime = 0;
-				}
-				
-				
 				System.out.println("TIME: " + halfSeconds);
-				
 				if(halfSeconds <= 0)
 				{
 					frog.die();
@@ -298,6 +282,8 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			if(end5)
 			window.drawImage(ImageIO.read(GoalFrogIMG), 800, 128, 64, 64, null);
 			
+			chooseFly();
+			
 			switch(fly) { // set fly
 			case 1:
 				window.drawImage(ImageIO.read(Fly), 32, 128, 64, 64, null);
@@ -343,7 +329,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		*/
 		
 		window.drawString("   " + String.format("%05d", score) + "   " + String.format("%05d", highscore), 0, 64);
-		
+
 		// TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if(halfSeconds <= 10)
 			window.setColor(Color.RED);
@@ -353,6 +339,7 @@ public class Screen extends JPanel implements Runnable , KeyListener
 		window.setColor(Color.YELLOW);
 		window.drawString("                        TIME", 0, 1024 );
 		
+
 		if(living = true)
 		{
 			log.slide();
@@ -474,75 +461,37 @@ public class Screen extends JPanel implements Runnable , KeyListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+      
+		// Goal Detection
 		
 		if(frog.y == 128 && frog.x >= 0 && frog.x <= 64) {
-			if(end1 == false) {
-				end1 = true;
-				score += 50;
-				frog.reset();
-				
-				if(fly == 1) {
-					chooseFly();
-					score += 200; // Add animation
-				}
-			} else 
-				frog.die();
+			end1 = true;
+			score += 50;
+			frog.reset();
 		}
 		
 		if(frog.y == 128 && frog.x > 128 && frog.x <= 256) {
-			if(end2 == false) {
-				end2 = true;
-				score += 50;
-				frog.reset();
-				
-				if(fly == 2) {
-					chooseFly();
-					score += 200; // Add animation
-				}
-			} else 
-				frog.die();
+			end2 = true;
+			score += 50;
+			frog.reset();
 		}
 		
 		if(frog.y == 128 && frog.x >= 384 && frog.x <= 448) {
-			if(end3 == false) {
-				end3 = true;
-				score += 50;
-				frog.reset();
-				
-				if(fly == 3) {
-					chooseFly();
-					score += 200; // Add animation
-				}
-			} else 
-				frog.die();
+			end3 = true;
+			score += 50;
+			frog.reset();
 		}
 		
 		if(frog.y == 128 && frog.x >= 576 && frog.x <= 640) {
-			if(end4 == false) {
-				end4 = true;
-				score += 50;
-				frog.reset();
-				
-				if(fly == 4) {
-					chooseFly();
-					score += 200; // Add animation
-				}
-			} else 
-				frog.die();
+			end4 = true;
+			score += 50;
+			frog.reset();
 		}
 		
 		if(frog.y == 128 && frog.x >= 768 && frog.x <= 832) {
-			if(end5 == false) {
-				end5 = true;
-				score += 50;
-				frog.reset();
-				
-				if(fly == 5) {
-					chooseFly();
-					score += 200; // Add animation
-				}
-			} else 
-				frog.die();
+			end5 = true;
+			score += 50;
+			frog.reset();
 		}
 	
 		if(end1 && end2 && end3 && end4 && end5) { // Reset all goals and give 1000 points 
@@ -553,40 +502,42 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			end5 = false;
 			
 			score += 1000;
+			level++;
 		}
 		
+		
+	}
+	
+	public void chooseFly() {
+		Random rand = new Random();
+		fly = 0;
+		
+		if(!end1 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 1;
+		}
+		if(!end2 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 2;
+		}
+		if(!end3 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 3;
+		}
+		if(!end4 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 4;
+		}
+		if(!end5 && fly == 0) {
+			if(rand.nextInt(2) == 1)
+				fly = 5;
+		}
 	}
 	
 	public void saveScore(int s) throws IOException {
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("score"), "utf-8"))) {
 			writer.write("" + s);
 		}
-	}
-	
-	private void chooseFly() {
-		if(fly == 0) {
-			if(!end1 && fly == 0) {
-				if(rand.nextInt(4) == 1)
-					fly = 1;
-			}
-			if(!end2 && fly == 0) {
-				if(rand.nextInt(4) == 1)
-					fly = 2;
-			}
-			if(!end3 && fly == 0) {
-				if(rand.nextInt(4) == 1)
-					fly = 3;
-			}
-			if(!end4 && fly == 0) {
-				if(rand.nextInt(4) == 1)
-					fly = 4;
-			}
-			if(!end5 && fly == 0) {
-				if(rand.nextInt(4) == 1)
-					fly = 5;
-			}
-		} else
-			fly = 0;
 	}
 	
 	@Override
@@ -631,8 +582,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 			}
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_F8)
-			chooseFly();
 	}
 	
 	@Override
