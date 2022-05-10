@@ -29,7 +29,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 	private File Log2;
 	private File Turtle0;
 	private File Turtle1;
-	private File FrogIMG; // might kill later
 	private File GoalFrogIMG;
 	private File Fly;
 	private File Car4;
