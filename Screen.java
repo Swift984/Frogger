@@ -612,7 +612,6 @@ public class Screen extends JPanel implements Runnable , KeyListener
 				keyDown = true;
 				frog.sprite = new File("sprite\\Frog.up.0.png");
 				score = score + 10;
-				steps ++;
 			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_F5) {
